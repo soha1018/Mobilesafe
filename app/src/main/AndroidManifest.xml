@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.itsoha.mobilesafe">
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--主界面的Activity-->
+        <activity android:name=".Activity.HomeActivity"></activity>
+        <!--设置界面的Activity-->
+        <activity android:name=".Activity.SettingActivity"></activity>
+        <!--手机防盗的Activity-->
+        <activity android:name=".Activity.SetupOverActivity"></activity>
+        <!--手机防盗导航界面一。-->
+        <activity android:name=".Activity.Setup1Activity"></activity>
+        <!--手机防盗导航界面二。-->
+        <activity android:name=".Activity.Setup2Activity"></activity>
+        <!--手机防盗导航界面三。-->
+        <activity android:name=".Activity.Setup3Activity"></activity>
+        <!--手机防盗导航界面四。-->
+        <activity android:name=".Activity.Setup4Activity"></activity>
+    </application>
+
+</manifest>

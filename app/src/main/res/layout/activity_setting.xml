@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="应用设置"
+        style="@style/TitleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.itsoha.mobilesafe.View.SettingItemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/siv_updata"
+        mobilesafe:destitle="自动更新设置"
+        mobilesafe:desoff="自动更新已开启"
+        mobilesafe:deson="自动更新已关闭"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingItemView>
+
+    <com.itsoha.mobilesafe.View.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:destitle="电话归属地的显示设置"></com.itsoha.mobilesafe.View.SettingItemView>
+</LinearLayout>

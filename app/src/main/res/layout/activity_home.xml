@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="功能列表"
+        style="@style/TitleStyle" />
+
+    <com.itsoha.mobilesafe.View.FocusTextView
+        android:text="长江长城，黄山黄河，我们都是一家人。长江长城，黄山黄河，我们都心中一样亲。"
+        android:singleLine="true"
+        android:textColor="#000"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.itsoha.mobilesafe.View.FocusTextView>
+
+    <GridView
+        android:id="@+id/gv_home"
+        android:numColumns="3"
+        android:verticalSpacing="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></GridView>
+</LinearLayout>
