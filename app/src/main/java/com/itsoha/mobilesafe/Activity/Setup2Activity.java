@@ -61,7 +61,7 @@ public class Setup2Activity extends Activity {
     //跳转到下一个界面
     public void nextPage(View view) {
         String simNumber = SpUtils.getString(this, ConstanVlauel.SIM_NUMBER, "");
-        if (TextUtils.isEmpty(simNumber)) {
+        if (!TextUtils.isEmpty(simNumber)) {
 
             Intent intent = new Intent(this, Setup3Activity.class);
             startActivity(intent);

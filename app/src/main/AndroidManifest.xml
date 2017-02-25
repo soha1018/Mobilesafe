@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -32,6 +34,8 @@
         <activity android:name=".Activity.Setup3Activity"></activity>
         <!--手机防盗导航界面四。-->
         <activity android:name=".Activity.Setup4Activity"></activity>
+        <!--选择联系人的界面-->
+        <activity android:name=".Activity.SelectContactActivity"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,14 @@ public class ConstanVlauel {
      */
     public static final String SIM_NUMBER = "sim_number";
     /**
+     * 是否选择联系人
+     */
+    public static final String CONTACT_PHONE = "contact_phone";
+    /**
+     * 是否开启手机防盗
+     */
+    public static final String OPEN_SAFETY = "open_safety";
+    /**
      * 是否需要开启更新
      */
     public static String IS_CHECK = "ischeck";

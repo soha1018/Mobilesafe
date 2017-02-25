@@ -132,6 +132,7 @@ public class HomeActivity extends Activity {
 
                         Intent intent = new Intent(getApplicationContext(), SetupOverActivity.class);
                         startActivity(intent);
+
                         alertDialog.dismiss();
 
                     }else {
