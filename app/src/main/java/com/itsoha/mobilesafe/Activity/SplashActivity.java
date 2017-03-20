@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -174,6 +175,52 @@ public class SplashActivity extends AppCompatActivity {
         initData();
         //初始化动画
         initAnimation();
+        //初始化数据库
+        initDb();
+    }
+
+    /**
+     * 初始化数据库
+     */
+    private void initDb() {
+        copyAddressDb("address.db");
+    }
+
+    /**
+     * 对数据库进行复制
+     * @param dbName 资产的名称
+     */
+    private void copyAddressDb(String dbName) {
+        File filesDir = getFilesDir();
+        File file = new File(filesDir, dbName);
+        //如果文件已经存在程序就返回
+        if (file.exists()){
+            return;
+        }
+        InputStream open = null;
+        FileOutputStream outputStream = null;
+        try {
+             open = getAssets().open(dbName);
+             outputStream = new FileOutputStream(file);
+
+            byte[] bytes = new byte[1024];
+            int temp = -1;
+            while ((temp = open.read(bytes))!=-1){
+                outputStream.write(bytes,0,temp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            if (open!=null && outputStream!=null){
+                try {
+                    open.close();
+                    outputStream.close();
+                    Log.i(TAG, "copyAddressDb: 成功写入文件");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -205,7 +252,7 @@ public class SplashActivity extends AppCompatActivity {
             checkVersion();
         }else {
             //关闭就发送消息，延迟处理
-            mHandler.sendEmptyMessageDelayed(ENTER_HOME,3500);
+            mHandler.sendEmptyMessageDelayed(ENTER_HOME,1500);
         }
     }
 
@@ -262,8 +309,8 @@ public class SplashActivity extends AppCompatActivity {
                 }finally {
                     //设置结束的时间
                     long endTime = System.currentTimeMillis();
-                    if ((endTime - startTime)<4000){
-                        SystemClock.sleep(4000-(endTime - startTime));
+                    if ((endTime - startTime)<1500){
+                        SystemClock.sleep(1500-(endTime - startTime));
                     }
                     //发送消息
                     mHandler.sendMessage(message);

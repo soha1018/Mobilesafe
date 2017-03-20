@@ -15,7 +15,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.itsoha.mobilesafe.R;
 import com.itsoha.mobilesafe.Utils.ConstanVlauel;
 import com.itsoha.mobilesafe.Utils.Md5Util;
@@ -68,10 +67,15 @@ public class HomeActivity extends Activity {
                         //手机防盗的界面
                         showDialog();
                         break;
+                    case 7:
+                        //高级工具的界面
+                        Intent intent = new Intent(getApplicationContext(), AToolActivity.class);
+                        startActivity(intent);
+                        break;
                     case 8:
                         //设置的界面
-                        Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-                        startActivity(intent);
+                        Intent intent1 = new Intent(getApplicationContext(), SettingActivity.class);
+                        startActivity(intent1);
                         break;
                 }
             }

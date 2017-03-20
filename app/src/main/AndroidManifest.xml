@@ -6,6 +6,15 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
     <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_CONTACTS"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.READ_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    <!--在窗体上挂载的权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -36,6 +45,38 @@
         <activity android:name=".Activity.Setup4Activity"></activity>
         <!--选择联系人的界面-->
         <activity android:name=".Activity.SelectContactActivity"></activity>
+        <!--高级工具的界面-->
+        <activity android:name=".Activity.AToolActivity"></activity>
+        <!--查询的归属地界面-->
+        <activity android:name=".Activity.QueryAddressActivity"></activity>
+        <!--手机重启的广播接受者-->
+        <receiver android:name=".Receiver.BootReciver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
+        <!--短信的广播接受者-->
+        <receiver android:name=".Receiver.SmsReceiver" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        <!--激活设备管理器的广播接收者-->
+        <receiver android:name=".Receiver.DeviceAdminReceiver"
+            android:label="@string/sample_device_admin"
+            android:description="@string/sample_device_admin_description"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+        <!--获取位置的服务-->
+        <service android:name=".Service.LocationService"></service>
+        <!--开启归属地的服务-->
+        <service android:name=".Service.AddressService"></service>
+
     </application>
 
 </manifest>

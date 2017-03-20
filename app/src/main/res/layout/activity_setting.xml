@@ -20,7 +20,11 @@
         android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingItemView>
 
     <com.itsoha.mobilesafe.View.SettingItemView
+        android:id="@+id/siv_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:destitle="电话归属地的显示设置"></com.itsoha.mobilesafe.View.SettingItemView>
+        app:destitle="电话归属地的显示设置"
+        app:desoff="归属地显示已开启"
+        app:deson="归属地显示已关闭"></com.itsoha.mobilesafe.View.SettingItemView>
+
 </LinearLayout>

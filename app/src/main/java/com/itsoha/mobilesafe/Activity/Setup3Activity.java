@@ -18,7 +18,7 @@ import com.itsoha.mobilesafe.Utils.SpUtils;
  * 手机防盗界面3
  * Created by Administrator on 2017/2/20.
  */
-public class Setup3Activity extends Activity{
+public class Setup3Activity extends BaseSetupActivity{
 
     private static final String TAG = "Setup3Activity";
     private EditText et_phone_setup3;
@@ -32,11 +32,44 @@ public class Setup3Activity extends Activity{
         initUi();
     }
 
+    @Override
+    public void showNextPage() {
+
+        String phones = et_phone_setup3.getText().toString();
+        SpUtils.putString(this,ConstanVlauel.CONTACT_PHONE,phones);
+
+        String phone = SpUtils.getString(getApplicationContext(), ConstanVlauel.CONTACT_PHONE, "");
+        if (!TextUtils.isEmpty(phone)){
+            Intent intent = new Intent(this, Setup4Activity.class);
+            startActivity(intent);
+
+            finish();
+
+            //平移的效果
+            overridePendingTransition(R.anim.next_in_anim,R.anim.next_out_anim);
+        }else {
+            Toast.makeText(this, "请输入电话号码", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void showPrePage() {
+        Intent intent = new Intent(this, Setup2Activity.class);
+        startActivity(intent);
+        finish();
+
+        //平移的效果
+        overridePendingTransition(R.anim.pre_in_anim,R.anim.pre_out_anim);
+
+    }
+
     /**
      * 初始化Ui
      */
     private void initUi() {
         et_phone_setup3 = (EditText) findViewById(R.id.et_phone_setup3);
+
 
         String contact = SpUtils.getString(getApplicationContext(), ConstanVlauel.CONTACT_PHONE, "");
         et_phone_setup3.setText(contact);
@@ -66,8 +99,7 @@ public class Setup3Activity extends Activity{
             String phone = data.getStringExtra("phone");
             Log.i(TAG, "onActivityResult: "+phone);
             //对返回的数据进行处理
-            String replace = phone.replace(" ", "");
-            replace.trim();
+            String replace = phone.replace(" ", "").trim();
             SpUtils.putString(getApplicationContext(), ConstanVlauel.CONTACT_PHONE,replace);
 
             et_phone_setup3.setText(replace);
@@ -76,24 +108,4 @@ public class Setup3Activity extends Activity{
 
     }
 
-
-    //跳转到下一个界面
-    public void nextPage(View view){
-        String phone = SpUtils.getString(getApplicationContext(), ConstanVlauel.CONTACT_PHONE, "");
-        if (!TextUtils.isEmpty(phone)){
-            Intent intent = new Intent(this, Setup4Activity.class);
-            startActivity(intent);
-
-            finish();
-        }else {
-            Toast.makeText(this, "请输入电话号码", Toast.LENGTH_SHORT).show();
-        }
-        
-    }
-    //跳转到上一页
-    public void prePage(View view){
-        Intent intent = new Intent(this, Setup2Activity.class);
-        startActivity(intent);
-        finish();
-    }
 }

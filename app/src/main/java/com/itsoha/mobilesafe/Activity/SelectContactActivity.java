@@ -1,7 +1,6 @@
 package com.itsoha.mobilesafe.Activity;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,8 +32,13 @@ public class SelectContactActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             //填充数据适配器
-            mAdapter = new MyAdapter();
-            lv_select_contact.setAdapter(mAdapter);
+            switch (msg.what) {
+                case 2:
+                    mAdapter = new MyAdapter();
+                    lv_select_contact.setAdapter(mAdapter);
+                    break;
+            }
+
         }
     };
     private ListView lv_select_contact;
@@ -46,9 +50,9 @@ public class SelectContactActivity extends Activity {
         setContentView(R.layout.activity_select_contact);
 
         initUi();
-
         initData();
 
+        Log.i(TAG, "onCreate: " + "成功");
     }
 
     /**
@@ -61,31 +65,37 @@ public class SelectContactActivity extends Activity {
             public void run() {
                 //先把之前的数据清除
                 list.clear();
-                ContentResolver resolver = getContentResolver();
-                Cursor query = resolver.query(Uri.parse("content://com.android.contacts/raw_contacts"), new String[]{"contact_id"}, null, null, null);
+                Cursor query = getContentResolver().query(Uri.parse("content://com.android.contacts/raw_contacts"), new String[]{"contact_id"}, null, null, null);
 
                 while (query.moveToNext()) {
                     HashMap<String, String> hash = new HashMap<String, String>();
                     String id = query.getString(0);
-                    Cursor cursor = resolver.query(Uri.parse("content://com.android.contacts/data"), new String[]{"data1", "mimetype"}, "raw_contact_id = ?", new String[]{id}, null);
-                    while (cursor.moveToNext()) {
-                        String data1 = cursor.getString(cursor.getColumnIndex("data1"));
-                        String mimeType = cursor.getString(cursor.getColumnIndex("mimetype"));
-                        if ("vnd.android.cursor.item/name".equals(mimeType)) { //是姓名
-                            Log.i("name", data1);
-                            hash.put("name", data1);
-                        } else if ("vnd.android.cursor.item/phone_v2".equals(mimeType)) { //手机
-                            hash.put("phone", data1);
-                            Log.i("phone", data1);
+                    Log.i(TAG, "run: " + id);
+                    //判断id不为零才进行查询
+                    if (id != null) {
+                        Cursor cursor = getContentResolver().query(Uri.parse("content://com.android.contacts/data"), new String[]{"data1", "mimetype"}, "raw_contact_id = ?", new String[]{id}, null);
+                        while (cursor.moveToNext()) {
+                            String data1 = cursor.getString(0);
+                            String mimeType = cursor.getString(1);
+
+                            if ("vnd.android.cursor.item/name".equals(mimeType)) { //是姓名
+                                Log.i("name", data1);
+                                hash.put("name", data1);
+                            } else if ("vnd.android.cursor.item/phone_v2".equals(mimeType)) { //手机
+                                hash.put("phone", data1);
+                                Log.i("phone", data1);
+                            }
                         }
+                        cursor.close();
+                        list.add(hash);
                     }
 
-                    list.add(hash);
-                    Log.i(TAG, "onCreate: " + list.toString());
-                    cursor.close();
+
                 }
                 query.close();
-                mHandler.sendEmptyMessage(0);
+                Message message = new Message();
+                message.what = 2;
+                mHandler.sendMessage(message);
             }
         }.start();
 
@@ -100,19 +110,20 @@ public class SelectContactActivity extends Activity {
         //初始化ListView
         lv_select_contact = (ListView) findViewById(R.id.lv_select_contact);
 
+
         lv_select_contact.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mAdapter != null){
+                if (mAdapter != null) {
                     HashMap<String, String> hash = mAdapter.getItem(position);
                     //获取当前条目指向集合的电话号码
                     String phone = hash.get("phone");
                     //在结束此界面回到导航界面，需要把数据返回去
                     Intent intent = new Intent();
-                    intent.putExtra("phone",phone);
+                    intent.putExtra("phone", phone);
 
-                    Log.i(TAG, "onItemClick: "+phone);
-                    setResult(0,intent);
+                    Log.i(TAG, "onItemClick: " + phone);
+                    setResult(0, intent);
                     finish();
                 }
             }

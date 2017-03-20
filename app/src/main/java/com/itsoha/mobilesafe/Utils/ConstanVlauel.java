@@ -27,6 +27,10 @@ public class ConstanVlauel {
      */
     public static final String OPEN_SAFETY = "open_safety";
     /**
+     * 是否开启悬浮窗
+     */
+    public static final String FLOATING_OFF = "floating_off";
+    /**
      * 是否需要开启更新
      */
     public static String IS_CHECK = "ischeck";

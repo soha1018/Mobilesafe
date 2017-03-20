@@ -18,7 +18,7 @@ import com.itsoha.mobilesafe.View.SettingItemView;
  * 手机防盗绑定sim卡的界面
  * Created by Administrator on 2017/2/20.
  */
-public class Setup2Activity extends Activity {
+public class Setup2Activity extends BaseSetupActivity {
 
     private SettingItemView siv_bound;
 
@@ -58,8 +58,8 @@ public class Setup2Activity extends Activity {
         });
     }
 
-    //跳转到下一个界面
-    public void nextPage(View view) {
+    @Override
+    public void showNextPage() {
         String simNumber = SpUtils.getString(this, ConstanVlauel.SIM_NUMBER, "");
         if (!TextUtils.isEmpty(simNumber)) {
 
@@ -67,15 +67,24 @@ public class Setup2Activity extends Activity {
             startActivity(intent);
 
             finish();
+
+            //平移的效果
+            overridePendingTransition(R.anim.next_in_anim, R.anim.next_out_anim);
         } else {
             Toast.makeText(this, "请绑定sim卡", Toast.LENGTH_SHORT).show();
         }
     }
 
-    //跳转到上一页
-    public void prePage(View view) {
+    @Override
+    public void showPrePage() {
         Intent intent = new Intent(this, Setup1Activity.class);
         startActivity(intent);
         finish();
+
+        //平移的效果
+        overridePendingTransition(R.anim.pre_in_anim,R.anim.pre_out_anim);
+
     }
+
+
 }

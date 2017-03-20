@@ -4,8 +4,113 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:text="手机防盗"
+        style="@style/TitleStyle" />
+
+    <RelativeLayout
+        android:padding="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textSize="20sp"
+            android:text="安全号码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="20sp"
+            android:text="0000"
+            android:layout_alignParentRight="true"
+            android:id="@+id/tv_phone_over"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_below="@id/tv_phone_over"
+            android:background="@drawable/listview_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:padding="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textSize="20sp"
+            android:text="防盗保护是否开启"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/iv_lock"
+            android:background="@mipmap/lock"
+            android:layout_alignParentRight="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+        <ImageView
+            android:layout_below="@id/iv_lock"
+            android:background="@drawable/listview_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:background="@drawable/selector_reset_bg"
         android:textSize="20sp"
-        android:text="防盗设置完成"
+        android:text="重新进入设置向导"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_reset_setup" />
+
+    <TextView
+        android:padding="7dp"
+        android:background="#ccc"
+        android:textSize="20sp"
+        android:text="功能介绍"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:text="gps追踪:    #*location*#"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:text="播放报警音乐:    #*alarm*#"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:text="远程删除数据:    #*wipedata*#"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:drawableLeft="@android:drawable/star_big_on"
+        android:gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:text="远程锁屏:    #*lockscreen*#"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
