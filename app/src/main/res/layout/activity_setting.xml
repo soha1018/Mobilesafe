@@ -27,4 +27,14 @@
         app:desoff="归属地显示已开启"
         app:deson="归属地显示已关闭"></com.itsoha.mobilesafe.View.SettingItemView>
 
+    <com.itsoha.mobilesafe.View.SettingClickView
+        android:id="@+id/scv_toast_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingClickView>
+
+    <com.itsoha.mobilesafe.View.SettingClickView
+        android:id="@+id/scv_toast_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingClickView>
+
 </LinearLayout>

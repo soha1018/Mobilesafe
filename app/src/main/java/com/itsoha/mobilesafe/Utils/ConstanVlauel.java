@@ -26,8 +26,21 @@ public class ConstanVlauel {
      * 是否开启手机防盗
      */
     public static final String OPEN_SAFETY = "open_safety";
+
     /**
-     * 是否开启悬浮窗
+     * Toast的样式
+     */
+    public static final String TOAST_STYLE = "toast_style";
+    /**
+     * Toast上部的坐标
+     */
+    public static final String TOAST_TOP = "toast_top";
+    /**
+     * Toast左边的坐标
+     */
+    public static final String TOAST_LEFT = "toast_left";
+    /**
+     * 悬浮窗的开启状态
      */
     public static final String FLOATING_OFF = "floating_off";
     /**

@@ -20,7 +20,7 @@ public class IsServiceRunning {
     public static boolean getServiceState(Context context,String serviceName){
         
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(5);
+        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(100);
 
         for (ActivityManager.RunningServiceInfo info:runningServices
         ){

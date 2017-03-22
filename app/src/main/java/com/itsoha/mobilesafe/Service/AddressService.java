@@ -4,17 +4,24 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import com.itsoha.mobilesafe.Engine.AddressDao;
 import com.itsoha.mobilesafe.R;
+import com.itsoha.mobilesafe.Utils.ConstanVlauel;
+import com.itsoha.mobilesafe.Utils.SpUtils;
 
 /**
  * Created by Administrator on 2017/3/18.
@@ -28,6 +35,17 @@ public class AddressService extends Service {
     private final WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
     private WindowManager mWM;
     private View mToast;
+    private String mAddress;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            tv_toast.setText(mAddress);
+        }
+    };
+    private TextView tv_toast;
+    private int[] mDrawableIds;
+    private int width;
+    private int height;
 
     @Nullable
     @Override
@@ -44,6 +62,9 @@ public class AddressService extends Service {
         mTelephony.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         //获取窗体的管理者，把吐司添加到系统的窗体中
         mWM = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display defaultDisplay = mWM.getDefaultDisplay();
+        width = defaultDisplay.getWidth();
+        height = defaultDisplay.getHeight();
         super.onCreate();
     }
 
@@ -63,9 +84,8 @@ public class AddressService extends Service {
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     //当电话接通时的状态
                     Log.i(TAG, "onCallStateChanged: 正在通话中");
-
                     //弹出toast
-                    showToast();
+                    showToast(incomingNumber);
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
                     //当铃声响起的时候
@@ -77,8 +97,10 @@ public class AddressService extends Service {
 
     /**
      * 打印吐司
+     *
+     * @param incomingNumber
      */
-    private void showToast() {
+    private void showToast(String incomingNumber) {
 
         final WindowManager.LayoutParams params = mParams;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -93,8 +115,102 @@ public class AddressService extends Service {
 
         //把这个吐司添加到布局中去
         mToast = View.inflate(this, R.layout.toast_view, null);
+        tv_toast = (TextView) mToast.findViewById(R.id.tv_toast);
+
+        //获取在设置中定义的值
+        params.x = SpUtils.getInt(getApplicationContext(), ConstanVlauel.TOAST_TOP, 0);
+        params.y = SpUtils.getInt(getApplicationContext(), ConstanVlauel.TOAST_LEFT, 0);
+
+        //在打电话中实现toast的触摸事件
+        mToast.setOnTouchListener(new View.OnTouchListener() {
+            public int startY;
+            public int startX;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        //按下
+                        startX = (int) event.getRawX();
+                        startY = (int) event.getRawY();
+                        Log.i(TAG, "onTouch: 按下的X：" + startX);
+
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int moveX = (int) event.getRawX();
+                        int moveY = (int) event.getRawY();
+
+                        int disX = moveX-startX;
+                        int disY = moveY-startY;
+
+                        params.x = params.x+disX;
+                        params.y = params.y+disY;
+
+                        if (params.x < 0) {
+                            params.x = 0;
+                        }
+                        if (params.y < 0) {
+                            params.y = 0;
+                        }
+                        if (params.x > width - mToast.getWidth()) {
+                            params.x = width - mToast.getWidth();
+                        }
+                        if (params.y > height - mToast.getHeight()){
+                            params.y = height - mToast.getHeight() - 22;
+                        }
+
+                        mWM.updateViewLayout(mToast,params);
+
+                        //重置后坐标
+                        startX = (int) event.getRawX();
+                        startY = (int) event.getRawY();
+                        Log.i(TAG, "onTouch: 重置后的坐标" + startX);
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        //抬起 记录坐标位置
+                        SpUtils.putInt(getApplicationContext(), ConstanVlauel.TOAST_LEFT, params.x);
+                        SpUtils.putInt(getApplicationContext(), ConstanVlauel.TOAST_TOP, params.y);
+
+                        break;
+                }
+                //返回True才会响应触摸事件
+                return false;
+            }
+        });
+        //从sp中获取色值文字的索引,匹配图片,用作展示
+        mDrawableIds = new int[]{
+                R.drawable.call_locate_white,
+                R.drawable.call_locate_orange,
+                R.drawable.call_locate_blue,
+                R.drawable.call_locate_gray,
+                R.drawable.call_locate_green};
+
+        //拿到图片的索引
+        int anInt = SpUtils.getInt(this, ConstanVlauel.TOAST_STYLE, 0);
+
+        tv_toast.setBackgroundResource(mDrawableIds[anInt]);
         mWM.addView(mToast, params);
 
+        //查询电话号码
+        queryPhone(incomingNumber);
+
+    }
+
+    /**
+     * 查询电话号码
+     *
+     * @param incomingNumber
+     */
+    private void queryPhone(final String incomingNumber) {
+        new Thread() {
+            @Override
+            public void run() {
+                mAddress = AddressDao.getAddress(incomingNumber);
+
+                handler.sendEmptyMessage(0);
+            }
+        }.start();
     }
 
     @Override
@@ -103,6 +219,7 @@ public class AddressService extends Service {
         if (mTelephony != null && mPhoneStateListener != null) {
             mTelephony.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
+        Log.i(TAG, "onDestroy: 服务销毁了");
         super.onDestroy();
     }
 }

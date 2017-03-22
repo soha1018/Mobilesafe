@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.itsoha.mobilesafe">
+
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
@@ -49,6 +50,9 @@
         <activity android:name=".Activity.AToolActivity"></activity>
         <!--查询的归属地界面-->
         <activity android:name=".Activity.QueryAddressActivity"></activity>
+        <!--Toast位置的半透明界面-->
+        <activity android:name=".Activity.ToastLocationActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <!--手机重启的广播接受者-->
         <receiver android:name=".Receiver.BootReciver">
             <intent-filter>
@@ -56,17 +60,19 @@
             </intent-filter>
         </receiver>
         <!--短信的广播接受者-->
-        <receiver android:name=".Receiver.SmsReceiver" >
+        <receiver android:name=".Receiver.SmsReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <!--激活设备管理器的广播接收者-->
-        <receiver android:name=".Receiver.DeviceAdminReceiver"
-            android:label="@string/sample_device_admin"
+        <receiver
+            android:name=".Receiver.DeviceAdminReceiver"
             android:description="@string/sample_device_admin_description"
+            android:label="@string/sample_device_admin"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data android:name="android.app.device_admin"
+            <meta-data
+                android:name="android.app.device_admin"
                 android:resource="@xml/device_admin" />
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
