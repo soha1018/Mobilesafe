@@ -36,5 +36,12 @@
         android:id="@+id/scv_toast_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingClickView>
+    <com.itsoha.mobilesafe.View.SettingItemView
+        android:id="@+id/siv_rocket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:destitle="小火箭的状态设置"
+        app:desoff="小火箭已开启"
+        app:deson="小火箭已关闭"></com.itsoha.mobilesafe.View.SettingItemView>
 
 </LinearLayout>

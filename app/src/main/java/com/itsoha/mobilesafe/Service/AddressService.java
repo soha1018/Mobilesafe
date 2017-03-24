@@ -1,8 +1,10 @@
 package com.itsoha.mobilesafe.Service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,6 +26,7 @@ import com.itsoha.mobilesafe.Utils.ConstanVlauel;
 import com.itsoha.mobilesafe.Utils.SpUtils;
 
 /**
+ * 归属地查询的Service类
  * Created by Administrator on 2017/3/18.
  */
 
@@ -40,12 +43,14 @@ public class AddressService extends Service {
         @Override
         public void handleMessage(Message msg) {
             tv_toast.setText(mAddress);
+            Log.i(TAG, "handleMessage: 地址："+mAddress);
         }
     };
     private TextView tv_toast;
     private int[] mDrawableIds;
     private int width;
     private int height;
+    private InnerOutgoingCall innerOutgoingCall;
 
     @Nullable
     @Override
@@ -65,6 +70,16 @@ public class AddressService extends Service {
         Display defaultDisplay = mWM.getDefaultDisplay();
         width = defaultDisplay.getWidth();
         height = defaultDisplay.getHeight();
+
+        //过滤打电话广播的条件
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+
+        //广播接收者的类
+        innerOutgoingCall = new InnerOutgoingCall();
+        //注册广播接收者
+        registerReceiver(innerOutgoingCall,intentFilter);
+
         super.onCreate();
     }
 
@@ -83,12 +98,13 @@ public class AddressService extends Service {
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     //当电话接通时的状态
-                    Log.i(TAG, "onCallStateChanged: 正在通话中");
-                    //弹出toast
-                    showToast(incomingNumber);
+
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
                     //当铃声响起的时候
+                    Log.i(TAG, "onCallStateChanged: 正在通话中");
+                    //弹出toast
+                    showToast(incomingNumber);
                     break;
             }
             super.onCallStateChanged(state, incomingNumber);
@@ -155,7 +171,7 @@ public class AddressService extends Service {
                         if (params.x > width - mToast.getWidth()) {
                             params.x = width - mToast.getWidth();
                         }
-                        if (params.y > height - mToast.getHeight()){
+                        if (params.y > height - mToast.getHeight() - 22){
                             params.y = height - mToast.getHeight() - 22;
                         }
 
@@ -206,6 +222,7 @@ public class AddressService extends Service {
         new Thread() {
             @Override
             public void run() {
+                Log.i(TAG, "run: 电话号码："+incomingNumber);
                 mAddress = AddressDao.getAddress(incomingNumber);
 
                 handler.sendEmptyMessage(0);
@@ -219,7 +236,23 @@ public class AddressService extends Service {
         if (mTelephony != null && mPhoneStateListener != null) {
             mTelephony.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
-        Log.i(TAG, "onDestroy: 服务销毁了");
+        if (innerOutgoingCall != null){
+            unregisterReceiver(innerOutgoingCall);
+        }
+        Log.i(TAG, "onDestroy: 归属地服务销毁了");
         super.onDestroy();
+    }
+
+    /**
+     * 拨电话的广播接收者
+     */
+    private class InnerOutgoingCall extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //获取拨打电话的号码数据
+            String phone = getResultData();
+            //弹出Toast去查询电话
+            showToast(phone);
+        }
     }
 }

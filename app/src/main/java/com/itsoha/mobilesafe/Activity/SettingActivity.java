@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.itsoha.mobilesafe.R;
 import com.itsoha.mobilesafe.Service.AddressService;
+import com.itsoha.mobilesafe.Service.RocketService;
 import com.itsoha.mobilesafe.Utils.ConstanVlauel;
 import com.itsoha.mobilesafe.Utils.IsServiceRunning;
 import com.itsoha.mobilesafe.Utils.SpUtils;
@@ -28,6 +28,7 @@ public class SettingActivity extends Activity {
     private String[] mToastStyle;
     private int mStyle;
     private SettingClickView scv_toast_location;
+    private SettingItemView siv_rocket;
 
 
     @Override
@@ -43,7 +44,34 @@ public class SettingActivity extends Activity {
         initToastStyle();
         //设置Toast的位置
         initLocation();
+        //设置小火箭的状态
+        initRocket();
 
+    }
+
+    /**
+     * 设置小火箭的状态
+     */
+    private void initRocket() {
+        siv_rocket = (SettingItemView) findViewById(R.id.siv_rocket);
+        boolean serviceState = IsServiceRunning.getServiceState(this, "com.itsoha.mobilesafe.Service.RocketService");
+        siv_rocket.setCheck(serviceState);
+
+        siv_rocket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //查看控件现在的状态
+                boolean check = siv_rocket.isCheck();
+                siv_rocket.setCheck(!check);
+                if (!check){
+                    //开启服务
+                    startService(new Intent(getApplicationContext(),RocketService.class));
+                }else {
+                    //关闭服务
+                    stopService(new Intent(getApplicationContext(),RocketService.class));
+                }
+            }
+        });
     }
 
     /**

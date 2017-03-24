@@ -67,6 +67,10 @@ public class HomeActivity extends Activity {
                         //手机防盗的界面
                         showDialog();
                         break;
+                    case 1:
+                        //通信卫士的界面
+                        startActivity(new Intent(getApplicationContext(),BlackNumberActivity.class));
+                        break;
                     case 7:
                         //高级工具的界面
                         Intent intent = new Intent(getApplicationContext(), AToolActivity.class);
