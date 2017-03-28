@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<!--下一步按钮变化配置-->
+
+    <!--点击后的图片-->
+    <item android:state_pressed="true" android:drawable="@drawable/main_clean_icon_pressed"></item>
+    <!--默认的图片-->
+    <item android:drawable="@drawable/main_clean_icon"></item>
+</selector>
