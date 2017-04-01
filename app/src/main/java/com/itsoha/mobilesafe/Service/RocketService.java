@@ -22,6 +22,7 @@ import com.itsoha.mobilesafe.R;
 
 
 /**
+ * 开启小火箭的服务
  * Created by Administrator on 2017/3/23.
  */
 
@@ -33,6 +34,8 @@ public class RocketService extends Service {
     private WindowManager mWM;
     private int mWidth;
     private int mHeight;
+    private ImageView smoke_top;
+    private ImageView smoke_bottom;
     private WindowManager.LayoutParams params;
     private View inflate;
     private Handler handler = new Handler() {
@@ -44,16 +47,27 @@ public class RocketService extends Service {
                     params.y = (int) msg.obj;
                     mWM.updateViewLayout(viewRocket, params);
 
+                    if (params.y == 0){
+                        mWM.removeView(viewRocket);
+                        Message message = new Message();
+                        message.what = 5;
+                        handler.sendMessageDelayed(message,1500);
+                    }
                     break;
                 case 3:
-                    Log.i(TAG, "handleMessage: 移除");
+                    Log.i(TAG, "handleMessage: 移除火箭尾气");
                     mWM.removeView(inflate);
+                    break;
+                case 5:
+                    //升空完成以后再把视图添加回来
+                    params.x = 0;
+                    params.y = 0;
+                    mWM.addView(viewRocket,params);
                     break;
             }
         }
     };
-    private ImageView smoke_top;
-    private ImageView smoke_bottom;
+
 
 
     @Nullable
@@ -101,7 +115,7 @@ public class RocketService extends Service {
         AnimationDrawable rocket = (AnimationDrawable) iv_rocket.getBackground();
         rocket.start();
 
-        //设置小火箭的退拽效果
+        //设置小火箭的退拽效果，对触摸事件进行监听
         iv_rocket.setOnTouchListener(new View.OnTouchListener() {
 
             private int startX;
@@ -154,6 +168,18 @@ public class RocketService extends Service {
                             //发射小火箭
                             sendRocket();
 
+                            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+                            layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+                            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            layoutParams.format = PixelFormat.TRANSLUCENT;
+                            layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+                            layoutParams.setTitle("Toast");
+                            layoutParams.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+                            //显示的位置
+                            layoutParams.gravity = Gravity.BOTTOM;
+
+                            //对尾气的窗口进行初始化
                             inflate = View.inflate(getApplicationContext(), R.layout.rocket_background_view, null);
                             smoke_top = (ImageView) inflate.findViewById(R.id.smoke_top);
                             smoke_bottom = (ImageView) inflate.findViewById(R.id.smoke_bottom);
@@ -161,10 +187,10 @@ public class RocketService extends Service {
                             alphaAnimation.setDuration(500);
                             smoke_top.startAnimation(alphaAnimation);
                             smoke_bottom.startAnimation(alphaAnimation);
+                            //松开小火箭的时候出现尾气
+                            mWM.addView(inflate,layoutParams);
 
-                            mWM.addView(inflate,params);
-
-                            //添加之后，只有在其不等于空的时候延迟发送消息，清空视图
+                            //添加之后，只有在其不等于空的时候延迟发送消息，清空尾气视图
                             if (mWM != null && inflate != null) {
                                 handler.sendEmptyMessageDelayed(3,1500);
                             }
@@ -172,13 +198,11 @@ public class RocketService extends Service {
 
                         break;
                 }
-
-
                 return true;
             }
         });
 
-        Log.i(TAG, "showRocket: 添加视图");
+        Log.i(TAG, "showRocket: 添加小火箭视图");
         mWM.addView(viewRocket, params);
 
     }

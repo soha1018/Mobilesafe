@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.itsoha.mobilesafe.R;
 import com.itsoha.mobilesafe.Service.AddressService;
+import com.itsoha.mobilesafe.Service.BlackNumberService;
 import com.itsoha.mobilesafe.Service.RocketService;
 import com.itsoha.mobilesafe.Utils.ConstanVlauel;
 import com.itsoha.mobilesafe.Utils.IsServiceRunning;
@@ -29,6 +30,7 @@ public class SettingActivity extends Activity {
     private int mStyle;
     private SettingClickView scv_toast_location;
     private SettingItemView siv_rocket;
+    private SettingItemView siv_black;
 
 
     @Override
@@ -46,6 +48,32 @@ public class SettingActivity extends Activity {
         initLocation();
         //设置小火箭的状态
         initRocket();
+        //开启黑名单拦截的服务
+        initBlackNumber();
+
+    }
+
+    /**
+     * 开启黑名单拦截的服务
+     */
+    private void initBlackNumber() {
+        siv_black = (SettingItemView) findViewById(R.id.siv_black);
+        //获取当前服务的运行状态并且设置条目的状态
+        boolean state = IsServiceRunning.getServiceState(getApplicationContext(), "com.itsoha.mobilesafe.Service.BlackNumberService");
+        siv_black.setCheck(state);
+
+        siv_black.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean check = siv_black.isCheck();
+                siv_black.setCheck(!check);
+                if (!check){
+                    startService(new Intent(getApplicationContext(),BlackNumberService.class));
+                }else {
+                    stopService(new Intent(getApplicationContext(),BlackNumberService.class));
+                }
+            }
+        });
 
     }
 

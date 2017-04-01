@@ -17,7 +17,7 @@
         mobilesafe:desoff="自动更新已开启"
         mobilesafe:deson="自动更新已关闭"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingItemView>
+        android:layout_height="wrap_content"/>
 
     <com.itsoha.mobilesafe.View.SettingItemView
         android:id="@+id/siv_address"
@@ -25,23 +25,32 @@
         android:layout_height="wrap_content"
         app:destitle="电话归属地的显示设置"
         app:desoff="归属地显示已开启"
-        app:deson="归属地显示已关闭"></com.itsoha.mobilesafe.View.SettingItemView>
+        app:deson="归属地显示已关闭"/>
 
     <com.itsoha.mobilesafe.View.SettingClickView
         android:id="@+id/scv_toast_style"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingClickView>
+        android:layout_height="wrap_content"/>
 
     <com.itsoha.mobilesafe.View.SettingClickView
         android:id="@+id/scv_toast_location"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.itsoha.mobilesafe.View.SettingClickView>
+        android:layout_height="wrap_content"/>
+
     <com.itsoha.mobilesafe.View.SettingItemView
         android:id="@+id/siv_rocket"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:destitle="小火箭的状态设置"
         app:desoff="小火箭已开启"
-        app:deson="小火箭已关闭"></com.itsoha.mobilesafe.View.SettingItemView>
+        app:deson="小火箭已关闭"/>
+
+    <com.itsoha.mobilesafe.View.SettingItemView
+        android:id="@+id/siv_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:destitle="黑名单拦截设置"
+        app:desoff="黑名单拦截已开启"
+        app:deson="黑名单已关闭"/>
 
 </LinearLayout>

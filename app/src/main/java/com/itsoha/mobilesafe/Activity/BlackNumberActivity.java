@@ -8,8 +8,11 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,19 +41,21 @@ public class BlackNumberActivity extends AppCompatActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (bumberAdapter == null){
+            if (bumberAdapter == null) {
                 bumberAdapter = new BlackNumberAdapter();
-            }else {
+                lv_black_bumber.setAdapter(bumberAdapter);
+            } else {
                 bumberAdapter.notifyDataSetChanged();
             }
 
-            lv_black_bumber.setAdapter(bumberAdapter);
             super.handleMessage(msg);
         }
     };
     private List<BlackNumerBen> queryList;
     private String TAG = "BlackNumberActivity";
     private BlackNumberAdapter bumberAdapter;
+    private boolean isState = false;
+    private long count;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +79,10 @@ public class BlackNumberActivity extends AppCompatActivity {
                 //初始化数据库
                 numberDao = BlackNumberDao.getInstance(getApplicationContext());
 
-                queryList = numberDao.findPage(20);
+                queryList = numberDao.findPage(0);
+
+                //获取数据库中有多少条目
+                count = numberDao.getCount();
 
                 handler.sendEmptyMessage(0);
 
@@ -99,8 +107,47 @@ public class BlackNumberActivity extends AppCompatActivity {
                 showDialogNumber();
             }
         });
+
+        //监听ListView的滚动事件
+        lv_black_bumber.setOnScrollListener(new AbsListView.OnScrollListener() {
+            //滚动状态发生改变的时候
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //当滚动状态空闲的时候并且移动到最后一个条目的时候，为防止重复加载 需要做容错处理
+                if (scrollState == SCROLL_STATE_IDLE && lv_black_bumber.getLastVisiblePosition() >= queryList.size() - 1 && !isState) {
+                    //查询20条数据
+                    Log.i(TAG, "onScrollStateChanged: 条件符合");
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            //如果条目总数大于集合时才可以去加载更多
+                            if (count > queryList.size()) {
+                                if (numberDao != null) {
+                                    List<BlackNumerBen> page = numberDao.findPage(queryList.size());
+                                    //把获取的数据添加到现有的List集合中
+                                    queryList.addAll(page);
+                                    //通知handler更新Ui
+                                    handler.sendEmptyMessage(0);
+                                }
+                            }
+
+                            super.run();
+                        }
+                    }.start();
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
+    /**
+     * 弹出对话框输入内容
+     */
     private void showDialogNumber() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final AlertDialog dialog = builder.create();
@@ -138,10 +185,8 @@ public class BlackNumberActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String phone = et_black_dialog_phone.getText().toString().trim();
                 if (!TextUtils.isEmpty(phone)) {
-                    for (int i = 0; i < 100; i++) {
-                        numberDao.insert(phone+i, String.valueOf(mode));
 
-                    }
+                    numberDao.insert(phone, String.valueOf(mode));
 
                     BlackNumerBen numerBen = new BlackNumerBen();
                     numerBen.setPhone(phone);
@@ -200,7 +245,7 @@ public class BlackNumberActivity extends AppCompatActivity {
                 holder.iv_black_item_delete = (ImageView) convertView.findViewById(R.id.iv_black_item_delete);
 
                 convertView.setTag(holder);
-            }else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
@@ -234,6 +279,9 @@ public class BlackNumberActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * ViewHolder
+     */
     private class ViewHolder {
         public TextView tv_black_item_phone;
         public TextView tv_black_item_mode;

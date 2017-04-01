@@ -17,7 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/raw'] } }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', 'src/main/res/raw']
+            aidl.srcDirs = ['src/main/aidl', 'com.android.internal.telephony', 'android.telephony', 'com/android/internal/telephony', 'android/telephony']
+        }
+    }
 }
 
 dependencies {

@@ -65,6 +65,20 @@ public class BlackNumberDao {
     }
 
     /**
+     * 获取当前数据库中有多少数据
+     * @return
+     */
+    public long getCount(){
+        SQLiteDatabase db = numberOpenHelper.getReadableDatabase();
+        int count = 0;
+        Cursor cursor = db.rawQuery("select count(*) from blacknumber", null);
+        while (cursor.moveToNext()){
+            count = cursor.getInt(0);
+        }
+        db.close();
+        return count;
+    }
+    /**
      * 根据电话号码更新屏蔽模式
      * @param phone
      * @param mode
@@ -125,5 +139,18 @@ public class BlackNumberDao {
 
         db.close();
         return list;
+    }
+
+    public int findMode(String address){
+        SQLiteDatabase db = numberOpenHelper.getReadableDatabase();
+        Cursor query = db.query(tableName, new String[]{"mode"}, "phone = ?", new String[]{address}, null, null, null);
+        int mode = 0;
+        while (query.moveToNext()){
+            mode = query.getInt(0);
+        }
+        query.close();
+        db.close();
+
+        return mode;
     }
 }
