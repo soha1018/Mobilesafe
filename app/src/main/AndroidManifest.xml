@@ -61,6 +61,8 @@
         <activity android:name=".Activity.BlackNumberActivity"></activity>
         <!--Toast位置的半透明界面-->
         <activity android:name=".Activity.ToastLocationActivity"></activity>
+        <!--手机软件管理的界面-->
+        <activity android:name=".Activity.AppManageActivity"></activity>
         <!--手机重启的广播接受者-->
         <receiver android:name=".Receiver.BootReciver">
             <intent-filter>
