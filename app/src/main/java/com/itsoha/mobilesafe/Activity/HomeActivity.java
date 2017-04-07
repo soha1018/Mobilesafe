@@ -75,6 +75,10 @@ public class HomeActivity extends Activity {
                         //软件管理的Activity
                         startActivity(new Intent(getApplicationContext(),AppManageActivity.class));
                         break;
+                    case 3:
+                        //进程管理界面
+                        startActivity(new Intent(getApplicationContext(),ProcessActivity.class));
+                        break;
                     case 7:
                         //高级工具的界面
                         Intent intent = new Intent(getApplicationContext(), AToolActivity.class);

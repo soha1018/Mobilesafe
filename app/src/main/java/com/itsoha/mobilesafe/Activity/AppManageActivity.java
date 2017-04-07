@@ -1,6 +1,9 @@
 package com.itsoha.mobilesafe.Activity;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -9,6 +12,7 @@ import android.os.StatFs;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -19,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itsoha.mobilesafe.Bean.AppInfo;
 import com.itsoha.mobilesafe.Engine.AppInfoProvider;
@@ -35,6 +40,7 @@ import java.util.List;
 public class AppManageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ListView lv_app;
+    private static final String TAG = "AppManageActivity";
     private List<AppInfo> mInfoList;
     private Handler handler = new Handler() {
         @Override
@@ -64,6 +70,8 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
      * 分享
      */
     private TextView tv_app_share;
+    private AppInfo mAppInfo;
+    private PopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +79,7 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_appmanage);
 
         //获取手机和内存卡的可用空间
-        inivMemorySize();
+        initMemorySize();
         //初始化ListView条目，显示应用信息
         initList();
     }
@@ -89,12 +97,42 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_uninstall:
+                //卸载应用，需要先判断是否是系统的应用
+                if (mAppInfo.isSystem()) {
+                    Toast.makeText(this, "这是系统的应用，您没有权限删除", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent("android.intent.action.DELETE");
+                    intent.addCategory("android.intent.category.DEFAULT");
+                    intent.setData(Uri.parse("package:" + mAppInfo.getPackageName()));
+                    startActivity(intent);
+                }
                 break;
             case R.id.tv_app_start:
+                Log.i(TAG, "onClick: 这是：" + mAppInfo.isSystem());
+                //从桌面开启应用
+                if (mAppInfo != null) {
+                    PackageManager packageManager = getPackageManager();
+                    Intent launchIntentForPackage = packageManager.getLaunchIntentForPackage(mAppInfo.getPackageName());
+                    if (launchIntentForPackage != null) {
+                        startActivity(launchIntentForPackage);
+                    } else {
+                        Toast.makeText(this, "抱歉，此应用不能被开启。", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case R.id.tv_app_share:
+                //通过短信分享应用
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, mAppInfo.getName() + "<--这个应用很好用，和我一起来玩吧!");
+                intent.setType("text/plain");
+                startActivity(intent);
                 break;
         }
+        //点击内容以后就关闭弹出的窗口
+        if (mPopupWindow != null) {
+            mPopupWindow.dismiss();
+        }
+
     }
 
     private class InfoAdapter extends BaseAdapter {
@@ -117,7 +155,7 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
 
         @Override
         public int getCount() {
-            return mSystemList.size() + mUserList.size();
+            return mSystemList.size() + mUserList.size() + 2;
         }
 
         @Override
@@ -125,10 +163,10 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
             if (position == 0 || position == mUserList.size() + 1) {
                 return null;
             } else {
-                if (position < mUserList.size()) {
+                if (position < mUserList.size() + 1) {
                     return mUserList.get(position - 1);
                 } else {
-                    return mSystemList.get(position - mUserList.size());
+                    return mSystemList.get(position - mUserList.size() - 2);
                 }
             }
 
@@ -178,7 +216,6 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
                 return convertView;
             }
 
-
         }
 
     }
@@ -200,14 +237,13 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /**
-     * 初始化ListView条目，显示应用信息
-     */
-    private void initList() {
-        lv_app = (ListView) findViewById(R.id.lv_app);
-        tv_app_des = (TextView) findViewById(R.id.tv_app_des);
 
-        //查询应用的信息是耗时的操作 应该防盗子线程中去完成
+    /**
+     * 当Activity重新获取焦点的时候，刷新列表中的数据
+     */
+    @Override
+    protected void onResume() {
+        //查询应用的信息是耗时的操作 应该放到子线程中去完成
         new Thread() {
             @Override
             public void run() {
@@ -223,6 +259,7 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
                     } else {
                         //用户应用
                         mUserList.add(appInfo);
+                        Log.i(TAG, "run: " + appInfo.getName());
                     }
                 }
                 //发送消息更新ListView
@@ -230,6 +267,15 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
                 super.run();
             }
         }.start();
+        super.onResume();
+    }
+
+    /**
+     * 初始化ListView条目，显示应用信息
+     */
+    private void initList() {
+        lv_app = (ListView) findViewById(R.id.lv_app);
+        tv_app_des = (TextView) findViewById(R.id.tv_app_des);
 
         //监听ListView滚动的监听事件
         lv_app.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -260,6 +306,11 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
                 if (position == 0 && position == mUserList.size() + 1) {
                     return;
                 } else {
+                    if (position < mUserList.size() + 1) {
+                        mAppInfo = mUserList.get(position - 1);
+                    } else {
+                        mAppInfo = mSystemList.get(position - 2);
+                    }
                     //弹出窗口
                     showPopupWindows(view);
                 }
@@ -269,48 +320,49 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
 
     /**
      * 弹出窗口选择操作
+     *
      * @param view
      */
     private void showPopupWindows(View view) {
         View popup_view = View.inflate(this, R.layout.app_popup_view, null);
         //初始化点击事件
         initView(popup_view);
-        PopupWindow popupWindow = new PopupWindow(popup_view,
+        mPopupWindow = new PopupWindow(popup_view,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 true);
         //已经有背景了，所以设置透明的背景
-        popupWindow.setBackgroundDrawable(new ColorDrawable());
-        popupWindow.showAsDropDown(view,100,-view.getHeight());
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable());
+        mPopupWindow.showAsDropDown(view, 100, -view.getHeight());
+
 
     }
 
     /**
      * 获取手机和内存卡的可用空间
      */
-    private void inivMemorySize() {
+    private void initMemorySize() {
         TextView tv_app_memory = (TextView) findViewById(R.id.tv_app_memory);
-        TextView tv_app_sd_memorymemory = (TextView) findViewById(R.id.tv_app_sd_memory);
+        TextView tv_app_sd_memory = (TextView) findViewById(R.id.tv_app_sd_memory);
 
 
         //首先获取路径
-        String path = Environment.getDataDirectory().getAbsolutePath();
-        String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String path = Environment.getDataDirectory().getPath();
+        String sdPath = Environment.getExternalStorageDirectory().getPath();
 
 
         //获取以上两个路径下文件夹的可用大小
         //获取手机的可用空间大小
         String memory = Formatter.formatFileSize(this, getAvailableSpace(path));
+        tv_app_memory.setText(memory);
         //获取SD卡可用空间的大小
         long sdSize = getAvailableSpace(sdPath);
         if (sdSize < 0) {
-            tv_app_sd_memorymemory.setText("SD卡还没有装载");
+            tv_app_sd_memory.setText("SD卡还没有装载");
         } else {
             String sdmemory = Formatter.formatFileSize(this, sdSize);
-            tv_app_sd_memorymemory.setText(sdmemory);
+            tv_app_sd_memory.setText(sdmemory);
         }
-
-        tv_app_memory.setText(memory);
 
 
     }
