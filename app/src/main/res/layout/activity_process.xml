@@ -32,13 +32,19 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp">
+
         <ListView
+            android:background="#20000000"
             android:id="@+id/lv_process"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <TextView
+            android:textSize="20sp"
+            android:id="@+id/tv_process_des"
+            android:background="#ccc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </FrameLayout>
 
     <LinearLayout

@@ -44,6 +44,14 @@ public class ConstanVlauel {
      */
     public static final String FLOATING_OFF = "floating_off";
     /**
+     * 是否隐藏系统进程
+     */
+    public static final String SHOW_SYSTEM = "show_system";
+    /**
+     * 应用快捷方式是否已经存在
+     */
+    public static final String HAS_SHORTCUT = "has_shortcut";
+    /**
      * 是否需要开启更新
      */
     public static String IS_CHECK = "ischeck";

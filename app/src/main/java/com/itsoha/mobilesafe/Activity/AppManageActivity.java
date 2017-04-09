@@ -15,6 +15,9 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -50,7 +53,7 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
             lv_app.setAdapter(infoAdapter);
 
             if (tv_app_des != null && mUserList.size() != 0) {
-                tv_app_des.setText("用户应用（" + mUserList.size() + "）");
+                tv_app_des.setText("用户应用(" + mUserList.size() + ")");
             }
             super.handleMessage(msg);
         }
@@ -180,6 +183,7 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             int viewType = getItemViewType(position);
+
             ViewHolderTitle viewHolderTitle = null;
             if (viewType == 0) {
                 if (convertView == null) {
@@ -191,9 +195,9 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
                     viewHolderTitle = (ViewHolderTitle) convertView.getTag();
                 }
                 if (position == 0) {
-                    viewHolderTitle.tv_title.setText("用户应用（" + mUserList.size() + "）");
+                    viewHolderTitle.tv_title.setText("用户应用(" + mUserList.size() + ")");
                 } else {
-                    viewHolderTitle.tv_title.setText("系统应用（" + mSystemList.size() + "）");
+                    viewHolderTitle.tv_title.setText("系统应用(" + mSystemList.size() + ")");
                 }
                 return convertView;
             } else {
@@ -327,6 +331,24 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         View popup_view = View.inflate(this, R.layout.app_popup_view, null);
         //初始化点击事件
         initView(popup_view);
+
+        //透明动画
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+        alphaAnimation.setDuration(1000);
+        alphaAnimation.setFillAfter(true);//保留动画最初的位置
+
+        //淡入淡出的缩放动画，相对于自己的中心点
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0,1,0,1,
+                ScaleAnimation.RELATIVE_TO_SELF,0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF,0.5f);
+        scaleAnimation.setDuration(1000);
+        scaleAnimation.setFillAfter(true);
+
+        //把两个动画添加到一个动画集合中 ，让他们一起显示
+        AnimationSet animationSet = new AnimationSet(true);//同一个插补器的效果
+        animationSet.addAnimation(alphaAnimation);
+        animationSet.addAnimation(scaleAnimation);
+
         mPopupWindow = new PopupWindow(popup_view,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -335,7 +357,8 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         mPopupWindow.setBackgroundDrawable(new ColorDrawable());
         mPopupWindow.showAsDropDown(view, 100, -view.getHeight());
 
-
+        //把此动画加载到视图中
+        popup_view.startAnimation(animationSet);
     }
 
     /**
@@ -382,6 +405,4 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
 
         return statFs.getAvailableBlocks() * statFs.getBlockSize();
     }
-
-
 }

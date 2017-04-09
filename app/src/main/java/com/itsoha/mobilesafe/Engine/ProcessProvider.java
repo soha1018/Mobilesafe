@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Debug;
 import android.util.Log;
 
+import com.itsoha.mobilesafe.Activity.ProcessActivity;
 import com.itsoha.mobilesafe.Bean.ProcessInfo;
 import com.itsoha.mobilesafe.R;
 
@@ -119,16 +120,45 @@ public class ProcessProvider {
                 }
             } catch (PackageManager.NameNotFoundException e) {
                  //如遇到异常情况，获取不到包名等
-                Log.i("NameNotFoundException", "getProcessInfo: 有异常");
                 Info.names = processInfo.processName;
                 Info.icon = context.getResources().getDrawable(R.mipmap.ic_launcher);
                 Info.isSystem = true;
-                Log.i("NameNotFoundException", "getProcessInfo: 异常处理");
 
 
             }
             list.add(Info);
         }
         return list;
+    }
+
+
+    /**
+     * 清除进程
+     * @param ctx 上下文
+     * @param info
+     */
+    public static void killProcess(Context ctx,ProcessInfo info) {
+        ActivityManager am = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+        am.killBackgroundProcesses(info.getPackageName());
+    }
+
+
+    /**
+     * 锁屏清理手机的进程
+     * @param context 上下文
+     */
+    public static void killAllProcess(Context context) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = am.getRunningAppProcesses();
+
+        for (ActivityManager.RunningAppProcessInfo info:runningAppProcesses
+             ) {
+            if (info.processName.equals(context.getPackageName())){
+                continue;
+            }
+            am.killBackgroundProcesses(info.processName);
+        }
+
     }
 }

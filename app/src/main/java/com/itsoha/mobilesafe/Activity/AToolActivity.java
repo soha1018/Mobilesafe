@@ -30,6 +30,22 @@ public class AToolActivity extends AppCompatActivity {
         initPhoneAddress();
         //备份短信的方法
         copySms();
+        //常有电话号码查询
+        initCommonNumber();
+    }
+
+    /**
+     * 常有电话号码查询
+     */
+    private void initCommonNumber() {
+        TextView tv_atool_commonnumber = (TextView) findViewById(R.id.tv_atool_commonnumber);
+
+        tv_atool_commonnumber.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),CommonNumberActivity.class));
+            }
+        });
     }
 
     /**
