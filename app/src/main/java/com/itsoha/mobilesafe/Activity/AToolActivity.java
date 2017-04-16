@@ -32,6 +32,21 @@ public class AToolActivity extends AppCompatActivity {
         copySms();
         //常有电话号码查询
         initCommonNumber();
+        //程序锁
+        initLock();
+    }
+
+    /**
+     * 程序锁
+     */
+    private void initLock() {
+        TextView tv_atool_lock = (TextView) findViewById(R.id.tv_atool_lock);
+        tv_atool_lock.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),AppLockActivity.class));
+            }
+        });
     }
 
     /**

@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="pink">#fcc</color>
+    <color name="textColorPrimaryDark">#ff000000</color>
+    <color name="textColorPrimary">#ffffffff</color>
 
 </resources>

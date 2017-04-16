@@ -77,6 +77,8 @@
         <activity android:name=".Activity.ProcessSettingActivity"></activity>
         <!--常用电话号码查询的界面-->
         <activity android:name=".Activity.CommonNumberActivity"/>
+        <!--程序锁的界面-->
+        <activity android:name=".Activity.AppLockActivity"></activity>
         <!--手机重启的广播接受者-->
         <receiver android:name=".Receiver.BootReciver">
             <intent-filter>
@@ -102,6 +104,20 @@
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
+        <!--窗口小部件-->
+        <receiver android:name=".Receiver.WidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/process_widget_provider" />
+        </receiver>
+        <!--接收窗体小部件，清理进程的广播-->
+        <receiver android:name=".Receiver.KillProcessReceiver" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.KILLPROCESSRECEIVER" />
+            </intent-filter>
+        </receiver>
         <!--获取位置的服务-->
         <service android:name=".Service.LocationService"></service>
         <!--开启归属地的服务-->
@@ -112,6 +128,8 @@
         <service android:name=".Service.BlackNumberService"></service>
         <!--锁屏清理的服务-->
         <service android:name=".Service.LockSreenService"></service>
+        <!--窗体小部件的服务-->
+        <service android:name=".Service.UpdateWidgetService"></service>
 
     </application>
 
