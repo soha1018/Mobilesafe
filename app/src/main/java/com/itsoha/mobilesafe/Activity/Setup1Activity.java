@@ -1,14 +1,10 @@
 package com.itsoha.mobilesafe.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.View;
 
 import com.itsoha.mobilesafe.R;
-import com.itsoha.mobilesafe.Receiver.BootReciver;
-import com.itsoha.mobilesafe.Receiver.SmsReceiver;
+
 
 /**
  * Created by Administrator on 2017/2/18.

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--进度条为零的时候-->
+    <item android:id="@android:id/background" android:drawable="@mipmap/security_progress_bg"/>
+    <!--进度条运行的时候-->
+    <item android:id="@android:id/secondaryProgress" android:drawable="@mipmap/security_progress"/>
+    <!--进度条完成的时候-->
+    <item android:id="@android:id/progress" android:drawable="@mipmap/security_progress"/>
+</layer-list>

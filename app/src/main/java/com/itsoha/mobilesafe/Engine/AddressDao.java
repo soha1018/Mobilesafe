@@ -4,6 +4,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+/**
+ * 对归属地数据库做查询的操作
+ */
 public class AddressDao {
 	private static final String tag = "AddressDao";
 	//1,指定访问数据库的路径

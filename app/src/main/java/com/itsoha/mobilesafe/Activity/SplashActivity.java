@@ -213,6 +213,7 @@ public class SplashActivity extends AppCompatActivity {
     private void initDb() {
         copyAddressDb("address.db");
         copyAddressDb("commonnum.db");
+        copyAddressDb("antivirus.db");
     }
 
     /**

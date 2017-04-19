@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
+ * Activity的基类
  * Created by Administrator on 2017/2/26.
  */
 

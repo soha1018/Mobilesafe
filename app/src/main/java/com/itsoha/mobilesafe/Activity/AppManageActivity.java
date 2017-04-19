@@ -338,9 +338,9 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
         alphaAnimation.setFillAfter(true);//保留动画最初的位置
 
         //淡入淡出的缩放动画，相对于自己的中心点
-        ScaleAnimation scaleAnimation = new ScaleAnimation(0,1,0,1,
-                ScaleAnimation.RELATIVE_TO_SELF,0.5f,
-                ScaleAnimation.RELATIVE_TO_SELF,0.5f);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0, 1, 0, 1,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
         scaleAnimation.setDuration(1000);
         scaleAnimation.setFillAfter(true);
 
@@ -376,8 +376,11 @@ public class AppManageActivity extends AppCompatActivity implements View.OnClick
 
         //获取以上两个路径下文件夹的可用大小
         //获取手机的可用空间大小
-        String memory = Formatter.formatFileSize(this, getAvailableSpace(path));
-        tv_app_memory.setText(memory);
+        long availableSpace = getAvailableSpace(path);
+        if (availableSpace > 0) {
+            String memory = Formatter.formatFileSize(this,availableSpace);
+            tv_app_memory.setText(memory);
+        }
         //获取SD卡可用空间的大小
         long sdSize = getAvailableSpace(sdPath);
         if (sdSize < 0) {

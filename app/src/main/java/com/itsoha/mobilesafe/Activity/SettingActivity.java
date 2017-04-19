@@ -13,6 +13,7 @@ import com.itsoha.mobilesafe.R;
 import com.itsoha.mobilesafe.Service.AddressService;
 import com.itsoha.mobilesafe.Service.BlackNumberService;
 import com.itsoha.mobilesafe.Service.RocketService;
+import com.itsoha.mobilesafe.Service.WatchDogService;
 import com.itsoha.mobilesafe.Utils.ConstanVlauel;
 import com.itsoha.mobilesafe.Utils.IsServiceRunning;
 import com.itsoha.mobilesafe.Utils.SpUtils;
@@ -20,6 +21,7 @@ import com.itsoha.mobilesafe.View.SettingClickView;
 import com.itsoha.mobilesafe.View.SettingItemView;
 
 /**
+ * 应用程序的设置界面
  * Created by Administrator on 2017/2/16.
  */
 public class SettingActivity extends Activity {
@@ -31,6 +33,7 @@ public class SettingActivity extends Activity {
     private SettingClickView scv_toast_location;
     private SettingItemView siv_rocket;
     private SettingItemView siv_black;
+    private SettingItemView siv_app_lock;
 
 
     @Override
@@ -50,7 +53,31 @@ public class SettingActivity extends Activity {
         initRocket();
         //开启黑名单拦截的服务
         initBlackNumber();
+        //初始化程序锁的服务
+        initAppLock();
+    }
 
+    /**
+     * 初始化程序锁的服务
+     */
+    private void initAppLock() {
+        siv_app_lock = (SettingItemView) findViewById(R.id.siv_app_lock);
+        //获取当前服务的运行状态并且设置条目的状态
+        boolean state = IsServiceRunning.getServiceState(getApplicationContext(), "com.itsoha.mobilesafe.Service.WatchDogService");
+        siv_app_lock.setCheck(state);
+
+        siv_app_lock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean check = siv_app_lock.isCheck();
+                siv_app_lock.setCheck(!check);
+                if (!check){
+                    startService(new Intent(getApplicationContext(),WatchDogService.class));
+                }else {
+                    stopService(new Intent(getApplicationContext(),WatchDogService.class));
+                }
+            }
+        });
     }
 
     /**

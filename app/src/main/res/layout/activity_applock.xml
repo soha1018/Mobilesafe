@@ -12,7 +12,7 @@
             android:id="@+id/bt_unlock"
             android:textColor="#fff"
             android:textSize="18sp"
-            android:text="为加锁"
+            android:text="未加锁"
             android:background="@mipmap/tab_left_pressed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/tv_app_unlock"
             android:text="未加锁的应用"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -48,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/tv_applock"
             android:text="已加锁的应用"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

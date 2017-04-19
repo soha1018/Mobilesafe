@@ -35,7 +35,8 @@ public class AppInfoProvider {
 
             //应用程序的名称
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-            String name = applicationInfo.loadLabel(packageManager).toString();
+
+            String name = applicationInfo.loadLabel(packageManager).toString()+applicationInfo.uid;
             appInfo.setName(name);
             appInfo.setIcon(applicationInfo.loadIcon(packageManager));
             //判断是否为系统应用

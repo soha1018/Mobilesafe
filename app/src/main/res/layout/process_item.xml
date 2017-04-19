@@ -5,40 +5,39 @@
 
     <ImageView
         android:id="@+id/iv_process_icon"
-        android:background="@mipmap/ic_launcher"
         android:layout_width="70dp"
-        android:layout_height="70dp" />
+        android:layout_height="70dp"
+        android:background="@mipmap/ic_launcher" />
 
     <TextView
-        android:textColor="#006"
-        android:layout_marginTop="7dp"
-        android:layout_toRightOf="@+id/iv_process_icon"
-        android:textSize="18sp"
-        android:text="应用名称"
         android:id="@+id/tv_process_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:layout_toRightOf="@+id/iv_process_icon"
+        android:text="应用名称"
+        android:textColor="#006"
+        android:textSize="18sp" />
 
     <TextView
-        android:textColor="#000"
+        android:id="@+id/tv_process_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tv_process_name"
         android:layout_marginTop="7dp"
         android:layout_toRightOf="@+id/iv_process_icon"
-        android:textSize="18sp"
         android:text="应用路径"
-        android:id="@+id/tv_process_path"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textColor="#000"
+        android:textSize="18sp" />
 
     <CheckBox
-        android:background="@color/colorAccent"
-        android:focusable="false"
-        android:clickable="false"
         android:id="@+id/cb_process"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false" />
 
 </RelativeLayout>

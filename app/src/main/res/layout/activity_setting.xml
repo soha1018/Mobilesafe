@@ -53,4 +53,12 @@
         app:desoff="黑名单拦截已开启"
         app:deson="黑名单已关闭"/>
 
+    <com.itsoha.mobilesafe.View.SettingItemView
+        android:id="@+id/siv_app_lock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:destitle="程序锁设置"
+        app:desoff="程序锁已开启"
+        app:deson="程序锁已关闭"/>
+
 </LinearLayout>

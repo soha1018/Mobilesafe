@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.itsoha.mobilesafe.Utils.ConstanVlauel;
@@ -15,8 +16,9 @@ import com.itsoha.mobilesafe.Utils.SpUtils;
  * Created by Administrator on 2017/2/26.
  */
 
-public class BootReciver extends BroadcastReceiver {
-    private static final String TAG = "BootReciver";
+public class BootReceiver extends BroadcastReceiver {
+    private static final String TAG = "BootReceiver";
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -26,10 +28,13 @@ public class BootReciver extends BroadcastReceiver {
 
         String sim = SpUtils.getString(context, ConstanVlauel.SIM_NUMBER, "");
         //如果两个值不匹配
-        if (!sim.equals(simSerialNumber)){
-            Log.i(TAG, "onReceive: "+"您的手机被偷走了");
+        if (!sim.equals(simSerialNumber)) {
+            Log.i(TAG, "onReceive: " + "您的手机被偷走了");
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(SpUtils.getString(context,ConstanVlauel.CONTACT_PHONE,""),null,"您的手机被偷走了",null,null);
+            String phone = SpUtils.getString(context, ConstanVlauel.CONTACT_PHONE, "");
+            if (!TextUtils.isEmpty(phone)) {
+                smsManager.sendTextMessage(phone, null, "您的手机被偷走了", null, null);
+            }
         }
     }
 }

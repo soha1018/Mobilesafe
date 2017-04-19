@@ -34,7 +34,7 @@
         android:layout_height="0dp">
 
         <ListView
-            android:background="#20000000"
+            android:background="#10000000"
             android:id="@+id/lv_process"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

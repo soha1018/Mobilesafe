@@ -79,6 +79,14 @@ public class HomeActivity extends Activity {
                         //进程管理界面
                         startActivity(new Intent(getApplicationContext(),ProcessActivity.class));
                         break;
+                    case 5:
+                        //杀毒的界面
+                        startActivity(new Intent(getApplicationContext(),AntiVirusActivity.class));
+                        break;
+                    case 6:
+                        //缓冲清理的界面
+                        startActivity(new Intent(getApplicationContext(),CacheClearActivity.class));
+                        break;
                     case 7:
                         //高级工具的界面
                         Intent intent = new Intent(getApplicationContext(), AToolActivity.class);
